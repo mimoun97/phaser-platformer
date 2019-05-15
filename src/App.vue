@@ -1,32 +1,32 @@
 <template>
   <div id="app">
-    <div id="nav">
-      <router-link to="/">Home</router-link> |
-      <router-link to="/about">About</router-link> |
-      <router-link to="/game">Game</router-link>
-    </div>
     <router-view/>
   </div>
 </template>
 
 <style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-}
-#nav {
-  padding: 30px;
-}
-
-#nav a {
-  font-weight: bold;
-  color: #2c3e50;
+html,
+body {
+  height: 100%; /*centrar*/
+  margin: 0;
+  padding: 0;
+  image-rendering: optimizeSpeed; /* Older versions of FF */
+  image-rendering: -moz-crisp-edges; /* FF 6.0+ */
+  image-rendering: -webkit-optimize-contrast; /* Webkit (non standard naming) */
+  image-rendering: -o-crisp-edges; /* OS X & Windows Opera (12.02+) */
+  image-rendering: crisp-edges; /* Possible future browsers. */
+  -ms-interpolation-mode: nearest-neighbor; /* IE (non standard naming) */
+  image-rendering: pixelated; /* Chrome 41 */
 }
 
-#nav a.router-link-exact-active {
-  color: #42b983;
+html {
+  display: table;
+  margin: auto;
+}
+
+body {
+  background-color: #eee;
+  display: table-cell;
+  vertical-align: middle;
 }
 </style>
