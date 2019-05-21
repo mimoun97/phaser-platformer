@@ -1,5 +1,4 @@
-import Phaser from 'phaser'
-
+/* global Phaser:true */
 let score = 0
 let scoreText
 
@@ -14,8 +13,7 @@ class GameScene extends Phaser.Scene {
   }
 
   create () {
-    // this.add.image(400, 300, "logo");
-    console.log('created')
+    console.log('GameScene: created()')
 
     // this.cameras.main.backgroundColor.setTo(52, 152, 219);
 

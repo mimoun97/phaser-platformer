@@ -1,5 +1,6 @@
 <template>
 <div v-cloak>
+  <div style="font-family:minecraft; position:absolute; left:-1000px; visibility:hidden;">.</div>
   <h1>2D Platformer</h1>
   <div id="game"></div>
 </div>
@@ -47,5 +48,10 @@ h1 {
   color:#3498DB;
   font-weight: bold;
   font-family: Arial, Helvetica, sans-serif;
+}
+@font-face {
+  font-family: "minecraft";
+  src: url("../assets/Minecraft.ttf");
+  font-weight: normal;
 }
 </style>
