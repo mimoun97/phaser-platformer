@@ -5,12 +5,13 @@ class OverScene extends Phaser.Scene {
     super({
       key: 'OverScene'
     })
+    // eslint-disable-next-line no-unused-expressions
     this.score
   }
 
   init (data) {
     console.log('OverScene init ', data.SCORE)
-    this.score = data.SCORE;
+    this.score = data.SCORE
   }
   preload () {}
 

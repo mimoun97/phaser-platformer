@@ -10,9 +10,9 @@ class GameScene extends Phaser.Scene {
     this.soundOn = true
     this.MAX_SCORE = 30
   }
-  init(data) {
+  init (data) {
     console.log('GameScene init ', this.score)
-    this.score = 0;
+    this.score = 0
   }
 
   preload () {}

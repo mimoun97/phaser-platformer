@@ -1,17 +1,17 @@
 /* global Phaser:true */
 // images
-import wallImg from '../../assets/wall.png'
-import groundImg from '../../assets/ground.png'
-import playerImg from '../../assets/player.png'
-import coinImg from '../../assets/coin.png'
-import enemyImg from '../../assets/enemy.png'
+import wallImg from '../../assets/img/wall.png'
+import groundImg from '../../assets/img/ground.png'
+import playerImg from '../../assets/img/player.png'
+import coinImg from '../../assets/img/coin.png'
+import enemyImg from '../../assets/img/enemy.png'
 
 // audio
-import dustAudio from '../../assets/dust.wav'
-import clickAudio from '../../assets/click.wav'
-import deadAudio from '../../assets/dead.wav'
-import jumpAudio from '../../assets/jump.wav'
-import coinAudio from '../../assets/coin.wav'
+import dustAudio from '../../assets/audio/dust.wav'
+import clickAudio from '../../assets/audio/click.wav'
+import deadAudio from '../../assets/audio/dead.wav'
+import jumpAudio from '../../assets/audio/jump.wav'
+import coinAudio from '../../assets/audio/coin.wav'
 
 class BootScene extends Phaser.Scene {
   constructor (test) {

@@ -62,7 +62,7 @@ h1 {
 }
 @font-face {
   font-family: "minecraft";
-  src: url("../assets/Minecraft.ttf");
+  src: url("../assets/fonts/Minecraft.ttf");
   font-weight: normal;
 }
 </style>

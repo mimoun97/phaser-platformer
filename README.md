@@ -1,29 +1,16 @@
-# phaser-platformer
+# 2D PLATFORMER
 
-## Project setup
-```
-npm install
-```
+## TODO
+- [ ] background music
+- [ ] animacions coins
+- [ ] sound coins, enemy, jump...
+- [ ] 
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+## Recursos
++ Tutorial from [lessmilk](http://www.lessmilk.com/tutorial/great-platformer), <http://www.lessmilk.com/tutorial/2d-platformer-phaser>
++ colors <https://www.lunchboxcode.com/tools/colour-codes/>
++ pass data scenes <http://browsergameshub.com/phaser-3-1-2-passing-data/>
++ phaser 3 examples <https://labs.phaser.io/index.html>
++ phaser 3 docs api <https://photonstorm.github.io/phaser3-docs/>
++ pagina phaser 3 i exemples <http://browsergameshub.com/category/dev-blog/>
++ exemple en typescript https://github.com/jestarray/gate

@@ -5,11 +5,11 @@ class Constants {
   static get BG_COLOR () {
     return '#3498DB'
   }
-  static get WIDTH() {
+  static get WIDTH () {
     // return window.innerWidth
     return 500
   }
-  static get HEIGHT() {
+  static get HEIGHT () {
     // return window.innerHeight
     return 200
   }
