@@ -1,16 +1,15 @@
 /* global Phaser:true */
-let score = 0
-let scoreText
 
 class GameScene extends Phaser.Scene {
   constructor (test) {
     super({
       key: 'GameScene'
     })
+    this.score = 0
+    this.scoreText = ''
+    this.soundOn = true
   }
-  preload () {
-
-  }
+  preload () {}
 
   create () {
     console.log('GameScene: created()')
@@ -53,10 +52,9 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.coins, this.level)
     this.physics.add.overlap(this.player, this.coins, this.takeCoin, null, this)
 
-    // score
-    scoreText = this.add.text(20, 20, 'score: ' + score, {
-      fontSize: '15px',
-      fill: '#000'
+    this.scoreText = this.add.text(20, 20, this.score, {
+      font: '30px minecraft',
+      fill: '#ffffff'
     })
 
     this.enemies = this.physics.add.group()
@@ -94,22 +92,24 @@ class GameScene extends Phaser.Scene {
     }
 
     this.cameras.main.on('camerashakestart', () => {
-      this.gameover.setVisible(true)
+      console.log('camerashakestart')
+      //this.gameover.setVisible(true)
     })
 
     this.cameras.main.on('camerashakecomplete', () => {
+      console.log('camerashakecomplete')
       this.gameover.setVisible(false)
+      this.scene.start('OverScene')
     })
   }
 
   takeCoin (player, coin) {
     // TODO millorar amb una animació
     coin.disableBody(true, true)
+
     console.log('takeCoin')
 
-    score += 10
-
-    scoreText.setText('Score: ' + score)
+    this.updateScore()
 
     // TODO executar so que pertoca
   }
@@ -123,6 +123,11 @@ class GameScene extends Phaser.Scene {
     // TODO executar so que pertoca
 
     player.scene.cameras.main.shake(500)
+  }
+
+  updateScore () {
+    this.score += 10
+    this.scoreText.setText(this.score)
   }
 }
 

@@ -8,6 +8,10 @@ import enemyImg from '../../assets/enemy.png'
 
 // audio
 import dustAudio from '../../assets/dust.wav'
+import clickAudio from '../../assets/click.wav'
+import deadAudio from '../../assets/dead.wav'
+import jumpAudio from '../../assets/jump.wav'
+import coinAudio from '../../assets/coin.wav'
 
 class BootScene extends Phaser.Scene {
   constructor (test) {
@@ -33,17 +37,25 @@ class BootScene extends Phaser.Scene {
     // load images
     this.load.image('wall', wallImg)
     this.load.image('ground', groundImg)
-    this.load.audio('dust', dustAudio)
     this.load.image('coin', coinImg)
     this.load.image('enemy', enemyImg)
     this.load.spritesheet('player', playerImg, {
       frameWidth: 28,
       frameHeight: 22
     })
+    // load audios
+    this.load.audio('coin', coinAudio)
+    this.load.audio('dead', deadAudio)
+    this.load.audio('dust', dustAudio)
+    this.load.audio('click', clickAudio)
+    this.load.audio('jump', jumpAudio)
   }
 
   create () {
     console.log('BootScene: created()')
+
+    // audio
+    var click = this.sound.add('click')
 
     var text = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, '2D PLATFORMER', {
       font: '48px minecraft',
@@ -63,7 +75,7 @@ class BootScene extends Phaser.Scene {
     // Input Event listeners
     startText.on('pointerover', () => { startText.setTint(0x7878ff) })
     startText.on('pointerout', () => { startText.clearTint() })
-    startText.on('pointerdown', () => { this.scene.start('GameScene') })
+    startText.on('pointerdown', () => { click.play(); this.scene.start('GameScene') })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
