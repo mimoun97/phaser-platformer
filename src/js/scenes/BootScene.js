@@ -73,7 +73,7 @@ class BootScene extends Phaser.Scene {
     }).setInteractive()
 
     // Input Event listeners
-    startText.on('pointerover', () => { startText.setTint(0x7878ff) })
+    startText.on('pointerover', () => { startText.setTint(0x2bff2b) })
     startText.on('pointerout', () => { startText.clearTint() })
     startText.on('pointerdown', () => { click.play(); this.scene.start('GameScene') })
 

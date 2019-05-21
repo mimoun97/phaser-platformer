@@ -8,7 +8,13 @@ class GameScene extends Phaser.Scene {
     this.score = 0
     this.scoreText = ''
     this.soundOn = true
+    this.MAX_SCORE = 30
   }
+  init(data) {
+    console.log('GameScene init ', this.score)
+    this.score = 0;
+  }
+
   preload () {}
 
   create () {
@@ -72,7 +78,7 @@ class GameScene extends Phaser.Scene {
   }
 
   update () {
-    this.player.anims.play('idle', true)
+    if (this.player) this.player.anims.play('idle', true)
 
     if (this.cursors.left.isDown) {
       console.log('left')
@@ -91,16 +97,14 @@ class GameScene extends Phaser.Scene {
       this.player.setFrame(3)
     }
 
-    this.cameras.main.on('camerashakestart', () => {
-      console.log('camerashakestart')
-      //this.gameover.setVisible(true)
-    })
+    if (this.score === this.MAX_SCORE) {
+      this.transitionTo('CompleteScene', { SCORE: this.score })
+    }
+  }
 
-    this.cameras.main.on('camerashakecomplete', () => {
-      console.log('camerashakecomplete')
-      this.gameover.setVisible(false)
-      this.scene.start('OverScene')
-    })
+  transitionTo (scene, data) {
+    console.log('transitionTo `{data}`')
+    this.scene.start(scene, data)
   }
 
   takeCoin (player, coin) {
@@ -122,7 +126,7 @@ class GameScene extends Phaser.Scene {
 
     // TODO executar so que pertoca
 
-    player.scene.cameras.main.shake(500)
+    this.cameras.main.shake(300, 0, false, this.transitionTo('OverScene', { SCORE: this.score }))
   }
 
   updateScore () {

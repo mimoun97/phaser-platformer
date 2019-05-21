@@ -1,7 +1,7 @@
 <template>
 <div v-cloak>
   <div style="font-family:minecraft; position:absolute; left:-1000px; visibility:hidden;">.</div>
-  <h1>2D PLATFORMER</h1>
+  <h1 style="visibility:hidden;">2D PLATFORMER</h1>
   <div id="game"></div>
 </div>
 </template>
@@ -14,6 +14,7 @@ import Constants from '../js/utils/Constants.js'
 import GameScene from '../js/scenes/GameScene.js'
 import BootScene from '../js/scenes/BootScene.js'
 import OverScene from '../js/scenes/OverScene.js'
+import CompleteScene from '../js/scenes/CompleteScene.js'
 
 export default {
   name: 'Game',
@@ -22,13 +23,15 @@ export default {
     let config = {
       title: Constants.TITLE,
       type: Phaser.AUTO,
-      width: 500,
-      height: 200,
+      width: Constants.WIDTH,
+      height: Constants.HEIGHT,
       backgroundColor: Constants.BG_COLOR,
       scene: [
+        // CompleteScene,
         BootScene,
         GameScene,
-        OverScene
+        OverScene,
+        CompleteScene
       ],
       physics: {
         default: 'arcade',

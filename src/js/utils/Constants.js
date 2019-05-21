@@ -5,6 +5,14 @@ class Constants {
   static get BG_COLOR () {
     return '#3498DB'
   }
+  static get WIDTH() {
+    // return window.innerWidth
+    return 500
+  }
+  static get HEIGHT() {
+    // return window.innerHeight
+    return 200
+  }
 }
 
 export default Constants
