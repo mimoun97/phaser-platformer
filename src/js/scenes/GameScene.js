@@ -91,8 +91,19 @@ class GameScene extends Phaser.Scene {
   }
 
   takeCoin (player, coin) {
-    // TODO millorar amb una animació
     coin.disableBody(true, true)
+    // TODO millorar amb una animació
+    this.tweens.add({
+      targets: coin,
+      y: 100,
+      scaleX: 0,
+      ease: 'Linear',
+      duration: 150,
+      yoyo: false,
+      repeat: 1,
+      onStart: function () { console.log('onStart'); console.log(arguments) },
+      onComplete: () => { }
+    })
 
     console.log('takeCoin')
 
