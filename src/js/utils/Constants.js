@@ -13,6 +13,15 @@ class Constants {
     // return window.innerHeight
     return 200
   }
+
+  static get IS_MOBILE () {
+    return true
+    // return window.IS_TOUCH
+  }
+
+  static get VOLUME () {
+    return 0.4
+  }
 }
 
 export default Constants

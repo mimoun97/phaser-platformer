@@ -42,7 +42,7 @@ class CompleteScene extends Phaser.Scene {
     // Input Event listeners
     restartText.on('pointerover', () => { restartText.setTint(0x2bff2b) })
     restartText.on('pointerout', () => { restartText.clearTint() })
-    restartText.on('pointerdown', () => { this.scene.start('GameScene') })
+    restartText.on('pointerdown', () => { this.startGame() })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
@@ -57,6 +57,13 @@ class CompleteScene extends Phaser.Scene {
       restartText,
       this.add.zone(this.sys.game.config.width / 2, this.sys.game.config.height / 2 + 63, this.sys.game.config.width, this.sys.game.config.height)
     )
+  }
+
+  startGame () {
+    // audio
+    let click = this.sound.add('click')
+    click.play()
+    this.scene.start('GameScene')
   }
 
   update () { }

@@ -5,13 +5,22 @@ import groundImg from '../../assets/img/ground.png'
 import playerImg from '../../assets/img/player.png'
 import coinImg from '../../assets/img/coin.png'
 import enemyImg from '../../assets/img/enemy.png'
+import rightImg from '../../assets/img/right.png'
+import leftImg from '../../assets/img/left.png'
+import jumpImg from '../../assets/img/jump.png'
 
 // audio
 import dustAudio from '../../assets/audio/dust.wav'
+import dustAudioMp3 from '../../assets/audio/dust.mp3'
 import clickAudio from '../../assets/audio/click.wav'
 import deadAudio from '../../assets/audio/dead.wav'
+import deadAudioMp3 from '../../assets/audio/dead.mp3'
 import jumpAudio from '../../assets/audio/jump.wav'
+import jumpAudioMp3 from '../../assets/audio/jump.mp3'
 import coinAudio from '../../assets/audio/coin.wav'
+import coinAudioMp3 from '../../assets/audio/coin.mp3'
+
+import Constants from '../utils/Constants'
 
 class BootScene extends Phaser.Scene {
   constructor (test) {
@@ -43,19 +52,30 @@ class BootScene extends Phaser.Scene {
       frameWidth: 28,
       frameHeight: 22
     })
+    // load
+    if (Constants.IS_MOBILE === true) {
+      this.loadControllers()
+    }
+
     // load audios
-    this.load.audio('coin', coinAudio)
-    this.load.audio('dead', deadAudio)
-    this.load.audio('dust', dustAudio)
+    this.load.audio('coin', [ coinAudio, coinAudioMp3 ])
+    this.load.audio('dead', [ deadAudio, deadAudioMp3 ])
+    this.load.audio('dust', [ dustAudio, dustAudioMp3 ])
+    this.load.audio('jump', [ jumpAudio, jumpAudioMp3 ])
     this.load.audio('click', clickAudio)
-    this.load.audio('jump', jumpAudio)
+  }
+
+  loadControllers () {
+    this.textures.addBase64('right', rightImg)
+    this.textures.addBase64('left', leftImg)
+    this.textures.addBase64('jump', jumpImg)
+    // this.load.image('right', rightImg)
+    // this.load.image('left', lefttImg)
+    // this.load.image('jump', jumpImg)
   }
 
   create () {
     console.log('BootScene: created()')
-
-    // audio
-    var click = this.sound.add('click')
 
     var text = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, '2D PLATFORMER', {
       font: '48px minecraft',
@@ -75,7 +95,7 @@ class BootScene extends Phaser.Scene {
     // Input Event listeners
     startText.on('pointerover', () => { startText.setTint(0x2bff2b) })
     startText.on('pointerout', () => { startText.clearTint() })
-    startText.on('pointerdown', () => { click.play(); this.scene.start('GameScene') })
+    startText.on('pointerdown', () => { this.startGame() })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
@@ -90,6 +110,13 @@ class BootScene extends Phaser.Scene {
       startText,
       this.add.zone(this.sys.game.config.width / 2, this.sys.game.config.height / 2 + 40, this.sys.game.config.width, this.sys.game.config.height)
     )
+  }
+
+  startGame () {
+    // audio
+    let click = this.sound.add('click')
+    click.play()
+    this.scene.start('GameScene')
   }
 }
 
