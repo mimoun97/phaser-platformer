@@ -35,6 +35,11 @@ class BootScene extends Phaser.Scene {
       key: 'BootScene'
     })
   }
+  init (data) {
+    console.debug('IS_MOBILE', Constants.IS_MOBILE)
+    Constants.IS_MOBILE = this.isMobile()
+    console.debug('IS_MOBILE', Constants.IS_MOBILE)
+  }
   preload () {
     const progress = this.add.graphics()
 
