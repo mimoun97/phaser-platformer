@@ -9,6 +9,7 @@
 import Phaser from 'phaser'
 // utils
 import Constants from '../js/utils/Constants.js'
+// import Resize from '../js/utils/Resize'
 
 // scenes
 import GameScene from '../js/scenes/GameScene.js'
@@ -45,7 +46,8 @@ export default {
         disableWebAudio: true
       },
       scale: {
-        mode: Phaser.Scale.FIT,
+        mode: Phaser.DOM.FIT,
+        orientation: Phaser.Scale.Orientation.PORTRAIT,
         parent: 'game',
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: Constants.WIDTH,
@@ -54,6 +56,25 @@ export default {
     }
 
     const game = new Phaser.Game(config) // eslint-disable-line no-unused-vars
+
+    function resize () {
+      let canvas = document.querySelector('canvas')
+      let windowWidth = window.innerWidth
+      let windowHeight = window.innerHeight
+      let windowRatio = windowWidth / windowHeight
+      let gameRatio = Constants.WIDTH / Constants.WIDTH
+
+      if (windowRatio < gameRatio) {
+        canvas.style.width = windowWidth + 'px'
+        canvas.style.height = (windowWidth / gameRatio) + 'px'
+      } else {
+        canvas.style.width = (windowHeight * gameRatio) + 'px'
+        canvas.style.height = windowHeight + 'px'
+      }
+    }
+
+    resize()
+    window.addEventListener('resize', resize(), false)
   }
 }
 </script>

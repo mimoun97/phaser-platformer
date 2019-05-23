@@ -1,6 +1,7 @@
 /* global Phaser:true */
 
 import Constants from '../utils/Constants'
+import AlignGrid from '../utils/AlignGrid'
 
 class GameScene extends Phaser.Scene {
   constructor (test) {
@@ -24,6 +25,7 @@ class GameScene extends Phaser.Scene {
 
   create () {
     console.log('GameScene: created()')
+    this.grid()
     this.addSounds()
     this.createLevel()
     this.setParticles()
@@ -31,6 +33,14 @@ class GameScene extends Phaser.Scene {
     if (Constants.IS_MOBILE) {
       this.addMobileInputs()
     }
+  }
+
+  grid () {
+    // make an align grid
+    this.grid = new AlignGrid({ scene: this, rows: Constants.WIDTH / 6, cols: Constants.HEIGHT / 3, width: Constants.WIDTH, height: Constants.HEIGHT })
+    // turn on the lines for testing
+    // and layout
+    this.grid.showNumbers()
   }
 
   update () {
@@ -224,6 +234,13 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.enemies, this.level)
 
     this.physics.add.overlap(this.player, this.enemies, this.die, null, this)
+
+    this.alignElements()
+  }
+
+  alignElements () {
+    this.grid.placeAtIndex(11, this.scoreText)
+    this.grid.placeAtIndex(0, this.livesText)
   }
 
   addMobileInputs () {

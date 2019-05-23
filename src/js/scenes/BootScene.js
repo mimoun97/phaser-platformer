@@ -157,11 +157,12 @@ class BootScene extends Phaser.Scene {
     console.log(this.sys.game.device)
 
     let canvas = this.sys.game.canvas
-    let fullscreen = this.sys.game.device.fullscreen
+    // let fullscreen = this.sys.game.device.fullscreen
 
     if (!fullscreen.available) {
       return
     }
+    // document.getElementById('game')[fullscreen.request]()
     canvas[fullscreen.request]()
 
     // window['game']['canvas'][this.sys.game.device.fullscreen.request]()
