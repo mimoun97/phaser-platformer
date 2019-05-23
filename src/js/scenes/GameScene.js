@@ -28,7 +28,7 @@ class GameScene extends Phaser.Scene {
     this.createLevel()
     this.setParticles()
 
-    if (Constants.IS_MOBILE === true) {
+    if (Constants.IS_MOBILE) {
       this.addMobileInputs()
     }
   }
@@ -108,7 +108,6 @@ class GameScene extends Phaser.Scene {
 
   takeCoin (player, coin) {
     coin.disableBody(true)
-    // TODO millorar amb una animació
     this.tweens.add({
       targets: coin,
       y: 50,
@@ -273,7 +272,7 @@ class GameScene extends Phaser.Scene {
         lifespan: 5000,
         on: false,
         active: true,
-        emitCallback: () => { console.log('EMIIIIIIIIIIT') }
+        emitCallback: () => { }
       })
 
     this.exp = this.make.particles('exp')
@@ -290,14 +289,8 @@ class GameScene extends Phaser.Scene {
         // lifespan: 5000,
         on: true,
         active: true,
-        emitCallback: () => { console.log('EMIIIIIIIIIIT') }
+        emitCallback: () => { }
       })
-
-    // this.exp = this.scene.add.emitter(0, 0, 20)
-    // this.exp.makeParticles('exp')
-    // this.exp.setYSpeed(-150, 150)
-    // this.exp.setXSpeed(-150, 150)
-    // this.exp.gravity = 0
   }
 }
 

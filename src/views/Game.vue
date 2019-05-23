@@ -43,6 +43,13 @@ export default {
       pixelArt: true,
       audio: {
         disableWebAudio: true
+      },
+      scale: {
+        mode: Phaser.Scale.FIT,
+        parent: 'game',
+        autoCenter: Phaser.Scale.CENTER_BOTH,
+        width: Constants.WIDTH,
+        height: Constants.HEIGHT
       }
     }
 

@@ -15,6 +15,7 @@ import leftImg from '../../assets/img/left.png'
 import jumpImg from '../../assets/img/jump.png'
 import settingsImg from '../../assets/img/settings.png'
 import startImg from '../../assets/img/start.png'
+import fullscreenImg from '../../assets/img/fullscreen.png'
 
 // audio
 import dustAudio from '../../assets/audio/dust.wav'
@@ -36,9 +37,7 @@ class BootScene extends Phaser.Scene {
     })
   }
   init (data) {
-    console.debug('IS_MOBILE', Constants.IS_MOBILE)
     Constants.IS_MOBILE = this.isMobile()
-    console.debug('IS_MOBILE', Constants.IS_MOBILE)
   }
   preload () {
     const progress = this.add.graphics()
@@ -70,9 +69,10 @@ class BootScene extends Phaser.Scene {
     // load ui
     this.textures.addBase64('settings', settingsImg)
     this.textures.addBase64('start', startImg)
+    this.textures.addBase64('fullscreen', fullscreenImg)
 
     // load
-    if (this.isMobile()) {
+    if (Constants.IS_MOBILE) {
       this.loadControllers()
     }
 
@@ -101,12 +101,12 @@ class BootScene extends Phaser.Scene {
   create () {
     console.log('BootScene: created()')
 
-    var text = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
+    let text = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
       font: '48px minecraft',
       fill: '#ffffff'
     })
 
-    var authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'by mimoun1997', {
+    let authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'by mimoun1997', {
       font: '28px minecraft',
       fill: '#eee'
     })
@@ -115,7 +115,7 @@ class BootScene extends Phaser.Scene {
     //   font: '20px minecraft',
     //   fill: '#f4fc07'
     // }).setInteractive()
-    var startText = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'start').setInteractive()
+    let startText = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'start').setInteractive()
     startText.alpha = 0.7
 
     // Input Event listeners
@@ -123,12 +123,15 @@ class BootScene extends Phaser.Scene {
     startText.on('pointerout', () => { startText.alpha = 0.7 })
     startText.on('pointerdown', () => { this.startGame() })
 
-    var settings = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'settings').setInteractive()
+    let settings = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'settings').setInteractive()
     settings.alpha = 0.7
     // Input Event listeners
     settings.on('pointerover', () => { settings.alpha = 1 })
     settings.on('pointerout', () => { settings.alpha = 0.7 })
     settings.on('pointerdown', () => { this.scene.start('SettingsScene') })
+
+    let fullscreen = this.add.image(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'fullscreen').setInteractive()
+    fullscreen.on('pointerup', () => { this.fullscreen() })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
@@ -148,6 +151,20 @@ class BootScene extends Phaser.Scene {
       settings,
       this.add.zone(Constants.WIDTH / 2 - settings.displayWidth / 2 - 20, Constants.HEIGHT / 2 + 40, Constants.WIDTH, Constants.HEIGHT)
     )
+  }
+
+  fullscreen () {
+    console.log(this.sys.game.device)
+
+    let canvas = this.sys.game.canvas
+    let fullscreen = this.sys.game.device.fullscreen
+
+    if (!fullscreen.available) {
+      return
+    }
+    canvas[fullscreen.request]()
+
+    // window['game']['canvas'][this.sys.game.device.fullscreen.request]()
   }
 
   startGame () {
