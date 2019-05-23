@@ -18,7 +18,7 @@ class OverScene extends Phaser.Scene {
   create () {
     console.log('OverScene: created()')
 
-    this.cameras.main.backgroundColor.setTo(244, 67, 54)
+    this.cameras.main.backgroundColor.setTo(231, 76, 60)
 
     let overText = this.add.text(this.sys.game.config.width / 2 + 70, this.sys.game.config.height / 2 + 50,
       'GAME OVER',
@@ -63,7 +63,7 @@ class OverScene extends Phaser.Scene {
     // audio
     let click = this.sound.add('click')
     click.play()
-    this.scene.start('GameScene')
+    this.scene.start('GameScene', { LIVES: 3 })
   }
 
   update () {}

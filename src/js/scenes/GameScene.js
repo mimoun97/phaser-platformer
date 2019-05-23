@@ -7,15 +7,16 @@ class GameScene extends Phaser.Scene {
     super({
       key: 'GameScene'
     })
-    this.score = 0
-    this.scoreText = ''
-    this.soundOn = true
-    this.MAX_SCORE = 30
   }
   init (data) {
-    console.log('GameScene init ', this.score)
-    this.score = 0
-
+    console.log('GameScene init data: ', data)
+    this.MAX_SCORE = 30 // max lives
+    this.score = data.SCORE || 0
+    this.lives = data.LIVES || 3
+    this.scoreText = '' + this.score
+    this.livesText = '' + this.lives
+    // sound and music
+    this.soundOn = true
     this.soundConfig = { mute: false, volume: Constants.VOLUME, rate: 1, detune: 0, seek: 0 }
   }
 
@@ -23,8 +24,9 @@ class GameScene extends Phaser.Scene {
 
   create () {
     console.log('GameScene: created()')
-
+    this.addSounds()
     this.createLevel()
+    this.setParticles()
 
     if (Constants.IS_MOBILE === true) {
       this.addMobileInputs()
@@ -42,10 +44,10 @@ class GameScene extends Phaser.Scene {
   }
 
   addSounds () {
-    this.deadSound = this.add.audio('dead', 0.4)
-    this.jumpSound = this.add.audio('jump', 0.4)
-    this.dustSound = this.add.audio('dust', 0.4)
-    this.coinSound = this.add.audio('coin', 0.4)
+    this.deadSound = this.sound.add('dead', this.soundConfig)
+    this.jumpSound = this.sound.add('jump', this.soundConfig)
+    this.dustSound = this.sound.add('dust', this.soundConfig)
+    this.coinSound = this.sound.add('coin', this.soundConfig)
   }
 
   inputs () {
@@ -61,20 +63,34 @@ class GameScene extends Phaser.Scene {
       this.player.body.velocity.x = 0
       this.player.setFrame(3)
     }
-
     if (this.player.body.touching.down && this.player.y > 100) {
+      console.log('IN THE AIR')
       if (this.hasJumped) {
+        console.log('in the ground')
         this.dustSound.play()
-        this.dust.x = this.player.x
-        this.dust.y = this.player.y + 10
-        this.dust.start(true, 300, null, 8)
+        this.dust.setX(this.player.x)
+        this.dust.setY(this.player.y + 10)
+        console.log('DUST: ', this.dust)
+        // this.dust.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
+        // this.exp.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
+        this.exp.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 20)
+        this.dust.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 20)
+        // this.dust.start(true, 300, null, 8)
       }
 
       this.hasJumped = false
     }
 
-    if (this.cursors.up.isDown) {
+    if (this.player.body.touching.down) {
+      console.log('touching down')
+      this.jumps = 2
+      this.hasJumped = false
+    }
+
+    if (this.cursors.up.isDown && this.jumps > 0) {
       this.jumpPlayer()
+      this.jumps--
+      console.error('jumps: ', this.jumps)
     }
   }
 
@@ -86,52 +102,73 @@ class GameScene extends Phaser.Scene {
   jumpPlayer () {
     this.player.setVelocityY(-220)
     this.player.setFrame(3)
-    let audio = this.sound.add('jump', this.soundConfig)
-    audio.play()
+    this.hasJumped = true
+    this.jumpSound.play()
   }
 
   takeCoin (player, coin) {
-    coin.disableBody(true, true)
+    coin.disableBody(true)
     // TODO millorar amb una animació
     this.tweens.add({
       targets: coin,
-      y: 100,
+      y: 50,
       scaleX: 0,
       ease: 'Linear',
-      duration: 150,
+      duration: 160,
       yoyo: false,
-      repeat: 1,
-      onStart: function () { console.log('onStart'); console.log(arguments) },
-      onComplete: () => { }
+      repeat: 0,
+      onStart: () => { console.log('onStart tweens') },
+      onComplete: () => { coin.disableBody(true, true) }
     })
-
-    console.log('takeCoin')
-
     this.updateScore()
-
-    let audio = this.sound.add('coin', this.soundConfig)
-    audio.play()
+    this.coinSound.play()
   }
 
   die (player, enemy) {
-    // TODO millorar amb una animació
-    player.disableBody(true, true)
+    // enemy.disableBody(true, true)
+    // player.disableBody(true, true)
+
+    this.player.setScale(0, 0)
+    this.tweens.add({
+      targets: player,
+      y: 80,
+      scaleX: 1,
+      scaleY: 1,
+      ease: 'Linear',
+      duration: 300,
+      yoyo: false,
+      repeat: 0
+    })
 
     enemy.disableBody(true, true)
+    this.cameras.main.shake(300)
+    this.deadSound.play()
 
-    // TODO executar so que pertoca
-    let audio = this.sound.add('dead', this.soundConfig)
-    audio.play()
+    player.x = 250
+    player.y = 0
 
-    this.cameras.main.shake(300, 0, false, this.transitionTo('OverScene', { SCORE: this.score }))
+    // scores & lives
+    this.updateLives()
+
+    if (this.lives === 0) {
+      player.disableBody(true, true)
+      this.scene.time.addEvent({
+        delay: 300,
+        callback: () => { this.transitionTo('OverScene', { SCORE: this.score }) },
+        loop: false,
+        repeat: 0
+      })
+    }
   }
 
   updateScore () {
     this.score += 10
-    console.log(this.scoreText)
-    this.scoreText.setTint(0x2bff2b)
     this.scoreText.setText(this.score)
-    this.scoreText.clearTint()
+  }
+
+  updateLives () {
+    this.lives -= 1
+    this.livesText.setText(this.lives)
   }
 
   createLevel () {
@@ -173,13 +210,18 @@ class GameScene extends Phaser.Scene {
       repeat: -1
     })
 
-    this.scoreText = this.add.text(20, 20, this.score, {
+    this.scoreText = this.add.text(0 + 20, 20, this.score, {
       font: '30px minecraft',
-      fill: '#ffffff'
+      fill: '#f1c40f'
+    })
+
+    this.livesText = this.add.text(Constants.WIDTH - 40, 20, this.lives, {
+      font: '30px minecraft',
+      fill: '#e74c3c'
     })
 
     this.enemies = this.physics.add.group()
-    this.enemies.create(500 / 2 + 120, 200 / 2 - 100, 'enemy')
+    this.enemies.create(Constants.WIDTH / 2 + 120, Constants.HEIGHT / 2, 'enemy')
     this.physics.add.collider(this.enemies, this.level)
 
     this.physics.add.overlap(this.player, this.enemies, this.die, null, this)
@@ -190,9 +232,8 @@ class GameScene extends Phaser.Scene {
     this.jumpButton = this.add.image(Constants.WIDTH - 72, Constants.HEIGHT / 2 + controlsY, 'jump').setInteractive()
     this.jumpButton.inputEnabled = true
     this.jumpButton.on('pointerdown', () => { this.jumpPlayer() })
-
-    // this.jumpButton.events.onInputDown.add(this.jumpPlayer, this)
     this.jumpButton.alpha = 0.5
+    this.jumpButton.setScale(0.6)
 
     this.moveLeft = false
     this.moveRight = false
@@ -204,6 +245,7 @@ class GameScene extends Phaser.Scene {
     this.leftButton.on('pointerdown', () => { this.moveLeft = true })
     this.leftButton.on('pointerup', () => { this.moveLeft = false })
     this.leftButton.alpha = 0.5
+    this.leftButton.setScale(0.6)
 
     this.rightButton = this.add.image(0 + 72 * 2, Constants.HEIGHT / 2 + controlsY, 'right').setInteractive()
     this.rightButton.inputEnabled = true
@@ -212,6 +254,50 @@ class GameScene extends Phaser.Scene {
     this.rightButton.on('pointerdown', () => { this.moveRight = true })
     this.rightButton.on('pointerup', () => { this.moveRight = false })
     this.rightButton.alpha = 0.5
+    this.rightButton.setScale(0.6)
+  }
+
+  setParticles () {
+    this.dust = this.make.particles('dust')
+    this.dust.createEmitter(
+      {
+        // x: Constants.WIDTH / 2,
+        // y: Constants.HEIGHT / 2,
+        quantity: { min: 200, max: 200 },
+        speedX: { min: -100, max: 100 },
+        speedY: { min: -100, max: 100 },
+        gravityY: 0,
+        gravityX: 0,
+        tint: 0x2bff2b,
+        // maxParticles: 20,
+        lifespan: 5000,
+        on: false,
+        active: true,
+        emitCallback: () => { console.log('EMIIIIIIIIIIT') }
+      })
+
+    this.exp = this.make.particles('exp')
+    this.exp.createEmitter(
+      {
+        // x: Constants.WIDTH / 2,
+        // y: Constants.HEIGHT / 2,
+        quantity: { min: 1, max: 1 },
+        speedX: { min: -150, max: 150 },
+        speedY: { min: -150, max: 150 },
+        gravityY: 0,
+        gravityX: 0,
+        // maxParticles: 20,
+        // lifespan: 5000,
+        on: true,
+        active: true,
+        emitCallback: () => { console.log('EMIIIIIIIIIIT') }
+      })
+
+    // this.exp = this.scene.add.emitter(0, 0, 20)
+    // this.exp.makeParticles('exp')
+    // this.exp.setYSpeed(-150, 150)
+    // this.exp.setXSpeed(-150, 150)
+    // this.exp.gravity = 0
   }
 }
 

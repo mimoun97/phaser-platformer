@@ -5,9 +5,16 @@ import groundImg from '../../assets/img/ground.png'
 import playerImg from '../../assets/img/player.png'
 import coinImg from '../../assets/img/coin.png'
 import enemyImg from '../../assets/img/enemy.png'
+import dustImg from '../../assets/img/dust.png'
+import expImg from '../../assets/img/exp.png'
+import heartImg from '../../assets/img/heart.png'
+
+// ui images
 import rightImg from '../../assets/img/right.png'
 import leftImg from '../../assets/img/left.png'
 import jumpImg from '../../assets/img/jump.png'
+import settingsImg from '../../assets/img/settings.png'
+import startImg from '../../assets/img/start.png'
 
 // audio
 import dustAudio from '../../assets/audio/dust.wav'
@@ -35,7 +42,7 @@ class BootScene extends Phaser.Scene {
     this.load.on('progress', (value) => {
       progress.clear()
       progress.fillStyle(0xffffff, 1)
-      progress.fillRect(0, this.sys.game.config.height / 2, this.sys.game.config.width * value, 60)
+      progress.fillRect(0, Constants.HEIGHT / 2, Constants.WIDTH * value, 60)
     })
 
     // Register a load complete event to launch the title screen when all files are loaded
@@ -48,12 +55,19 @@ class BootScene extends Phaser.Scene {
     this.load.image('ground', groundImg)
     this.load.image('coin', coinImg)
     this.load.image('enemy', enemyImg)
+    this.load.image('dust', dustImg)
+    this.load.image('exp', expImg)
+    this.textures.addBase64('heart', heartImg)
     this.load.spritesheet('player', playerImg, {
       frameWidth: 28,
       frameHeight: 22
     })
+    // load ui
+    this.textures.addBase64('settings', settingsImg)
+    this.textures.addBase64('start', startImg)
+
     // load
-    if (Constants.IS_MOBILE === true) {
+    if (this.isMobile()) {
       this.loadControllers()
     }
 
@@ -63,6 +77,11 @@ class BootScene extends Phaser.Scene {
     this.load.audio('dust', [ dustAudio, dustAudioMp3 ])
     this.load.audio('jump', [ jumpAudio, jumpAudioMp3 ])
     this.load.audio('click', clickAudio)
+  }
+
+  isMobile () {
+    return this.sys.game.device.os.iPhone || this.sys.game.device.os.android || this.sys.game.device.os.iPad ||
+    this.sys.game.device.os.windowsPhone
   }
 
   loadControllers () {
@@ -77,38 +96,52 @@ class BootScene extends Phaser.Scene {
   create () {
     console.log('BootScene: created()')
 
-    var text = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, '2D PLATFORMER', {
+    var text = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
       font: '48px minecraft',
       fill: '#ffffff'
     })
 
-    var authorText = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'by mimoun1997', {
+    var authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'by mimoun1997', {
       font: '28px minecraft',
       fill: '#eee'
     })
 
-    var startText = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'START', {
-      font: '20px minecraft',
-      fill: '#f4fc07'
-    }).setInteractive()
+    // var startText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'START', {
+    //   font: '20px minecraft',
+    //   fill: '#f4fc07'
+    // }).setInteractive()
+    var startText = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'start').setInteractive()
+    startText.alpha = 0.7
 
     // Input Event listeners
-    startText.on('pointerover', () => { startText.setTint(0x2bff2b) })
-    startText.on('pointerout', () => { startText.clearTint() })
+    startText.on('pointerover', () => { startText.alpha = 1 })
+    startText.on('pointerout', () => { startText.alpha = 0.7 })
     startText.on('pointerdown', () => { this.startGame() })
+
+    var settings = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'settings').setInteractive()
+    settings.alpha = 0.7
+    // Input Event listeners
+    settings.on('pointerover', () => { settings.alpha = 1 })
+    settings.on('pointerout', () => { settings.alpha = 0.7 })
+    settings.on('pointerdown', () => { this.scene.start('SettingsScene') })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
       text,
-      this.add.zone(this.sys.game.config.width / 2, this.sys.game.config.height / 2 - 36, this.sys.game.config.width, this.sys.game.config.height)
+      this.add.zone(Constants.WIDTH / 2, Constants.HEIGHT / 2 - 36, Constants.WIDTH, Constants.HEIGHT)
     )
     Phaser.Display.Align.In.Center(
       authorText,
-      this.add.zone(this.sys.game.config.width / 2 - 7, this.sys.game.config.height / 2, this.sys.game.config.width, this.sys.game.config.height)
+      this.add.zone(Constants.WIDTH / 2 - 7, Constants.HEIGHT / 2, Constants.WIDTH, Constants.HEIGHT)
     )
     Phaser.Display.Align.In.Center(
       startText,
-      this.add.zone(this.sys.game.config.width / 2, this.sys.game.config.height / 2 + 40, this.sys.game.config.width, this.sys.game.config.height)
+      this.add.zone(Constants.WIDTH / 2 + startText.displayWidth / 2 + 20, Constants.HEIGHT / 2 + 40, Constants.WIDTH, Constants.HEIGHT)
+    )
+
+    Phaser.Display.Align.In.Center(
+      settings,
+      this.add.zone(Constants.WIDTH / 2 - settings.displayWidth / 2 - 20, Constants.HEIGHT / 2 + 40, Constants.WIDTH, Constants.HEIGHT)
     )
   }
 
