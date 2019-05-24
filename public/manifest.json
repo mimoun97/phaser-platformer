@@ -1,6 +1,7 @@
 {
-  "name": "2D PLATFORMER by mimoun97",
+  "name": "2D PLATFORMER",
   "short_name": "2D PLATFORMER",
+  "description": "A very basic 2D platformer.",
   "icons": [
     {
       "src": "./img/icons/android-chrome-192x192.png",
@@ -14,8 +15,8 @@
     }
   ],
   "start_url": "./",
-  "display": "standalone",
+  "display": "fullscreen",
   "orientation": "landscape",
-  "background_color": "#005784",
+  "background_color": "#3498DB",
   "theme_color": "#3498DB"
 }

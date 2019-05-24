@@ -1,21 +1,23 @@
 <template>
 <div v-cloak>
   <div style="font-family:minecraft; position:absolute; left:-1000px; visibility:hidden;">.</div>
-  <h1 style="visibility:hidden;">2D PLATFORMER</h1>
-  <div id="game"></div>
+  <h1>2D PLATFORMER</h1>
+  <div id="game" style="overflow: hidden;width: 100%;height: 100%;"></div>
 </div>
 </template>
 <script>
 import Phaser from 'phaser'
 // utils
-import Constants from '../js/utils/Constants.js'
+import Constants from '../js/utils/Constants'
 // import Resize from '../js/utils/Resize'
 
 // scenes
-import GameScene from '../js/scenes/GameScene.js'
-import BootScene from '../js/scenes/BootScene.js'
-import OverScene from '../js/scenes/OverScene.js'
-import CompleteScene from '../js/scenes/CompleteScene.js'
+import GameScene from '../js/scenes/GameScene'
+import BootScene from '../js/scenes/BootScene'
+import OverScene from '../js/scenes/OverScene'
+import CompleteScene from '../js/scenes/CompleteScene'
+import SettingsScene from '../js/scenes/SettingsScene'
+import PreloadScene from '../js/scenes/PreloadScene'
 
 export default {
   name: 'Game',
@@ -28,11 +30,13 @@ export default {
       height: Constants.HEIGHT,
       backgroundColor: Constants.BG_COLOR,
       scene: [
-        // CompleteScene,
+        SettingsScene,
+        PreloadScene,
         BootScene,
         GameScene,
         OverScene,
-        CompleteScene
+        CompleteScene,
+        // SettingsScene
       ],
       physics: {
         default: 'arcade',
@@ -46,35 +50,19 @@ export default {
         disableWebAudio: true
       },
       scale: {
-        mode: Phaser.DOM.FIT,
-        orientation: Phaser.Scale.Orientation.PORTRAIT,
+        mode: Phaser.Scale.FIT,
         parent: 'game',
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: Constants.WIDTH,
         height: Constants.HEIGHT
-      }
+      },
+      loader: {
+        baseURL: 'assets'
+      },
+      url: 'https://phaser-platformer-mimoun1997.netlify.com/'
     }
 
     const game = new Phaser.Game(config) // eslint-disable-line no-unused-vars
-
-    function resize () {
-      let canvas = document.querySelector('canvas')
-      let windowWidth = window.innerWidth
-      let windowHeight = window.innerHeight
-      let windowRatio = windowWidth / windowHeight
-      let gameRatio = Constants.WIDTH / Constants.WIDTH
-
-      if (windowRatio < gameRatio) {
-        canvas.style.width = windowWidth + 'px'
-        canvas.style.height = (windowWidth / gameRatio) + 'px'
-      } else {
-        canvas.style.width = (windowHeight * gameRatio) + 'px'
-        canvas.style.height = windowHeight + 'px'
-      }
-    }
-
-    resize()
-    window.addEventListener('resize', resize(), false)
   }
 }
 </script>
@@ -87,6 +75,7 @@ h1 {
     font-family: minecraft, Arial, Helvetica, sans-serif;
     /* box-shadow: inset 0 0 0px 1px black; */
     text-shadow: -6px -3px 2px #0000001a;
+    visibility:hidden; /* de moment no mostrar */
 }
 @font-face {
   font-family: "minecraft";

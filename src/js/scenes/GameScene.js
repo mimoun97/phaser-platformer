@@ -1,7 +1,6 @@
 /* global Phaser:true */
 
 import Constants from '../utils/Constants'
-import AlignGrid from '../utils/AlignGrid'
 
 class GameScene extends Phaser.Scene {
   constructor (test) {
@@ -17,7 +16,7 @@ class GameScene extends Phaser.Scene {
     this.scoreText = '' + this.score
     this.livesText = '' + this.lives
     // sound and music
-    this.soundOn = true
+    this.soundOn = Constants.SOUND_ON
     this.soundConfig = { mute: false, volume: Constants.VOLUME, rate: 1, detune: 0, seek: 0 }
   }
 
@@ -25,7 +24,6 @@ class GameScene extends Phaser.Scene {
 
   create () {
     console.log('GameScene: created()')
-    this.grid()
     this.addSounds()
     this.createLevel()
     this.setParticles()
@@ -33,14 +31,6 @@ class GameScene extends Phaser.Scene {
     if (Constants.IS_MOBILE) {
       this.addMobileInputs()
     }
-  }
-
-  grid () {
-    // make an align grid
-    this.grid = new AlignGrid({ scene: this, rows: Constants.WIDTH / 6, cols: Constants.HEIGHT / 3, width: Constants.WIDTH, height: Constants.HEIGHT })
-    // turn on the lines for testing
-    // and layout
-    this.grid.showNumbers()
   }
 
   update () {
@@ -83,8 +73,8 @@ class GameScene extends Phaser.Scene {
         console.log('DUST: ', this.dust)
         // this.dust.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
         // this.exp.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
-        this.exp.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 20)
-        this.dust.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 20)
+        this.exp.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 300)
+        this.dust.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 300)
         // this.dust.start(true, 300, null, 8)
       }
 
@@ -134,34 +124,31 @@ class GameScene extends Phaser.Scene {
   }
 
   die (player, enemy) {
-    // enemy.disableBody(true, true)
-    // player.disableBody(true, true)
-
     this.player.setScale(0, 0)
     this.tweens.add({
       targets: player,
+      callbackScope: this,
       y: 80,
       scaleX: 1,
       scaleY: 1,
       ease: 'Linear',
       duration: 300,
       yoyo: false,
-      repeat: 0
+      repeat: 0,
+      onComplete: () => { player.x = 250; player.y = 0 }
     })
 
     enemy.disableBody(true, true)
     this.cameras.main.shake(300)
     this.deadSound.play()
 
-    player.x = 250
-    player.y = 0
-
     // scores & lives
     this.updateLives()
 
+    // no lives? wait to shake and die
     if (this.lives === 0) {
       player.disableBody(true, true)
-      this.scene.time.addEvent({
+      this.time.addEvent({
         delay: 300,
         callback: () => { this.transitionTo('OverScene', { SCORE: this.score }) },
         loop: false,
@@ -234,13 +221,6 @@ class GameScene extends Phaser.Scene {
     this.physics.add.collider(this.enemies, this.level)
 
     this.physics.add.overlap(this.player, this.enemies, this.die, null, this)
-
-    this.alignElements()
-  }
-
-  alignElements () {
-    this.grid.placeAtIndex(11, this.scoreText)
-    this.grid.placeAtIndex(0, this.livesText)
   }
 
   addMobileInputs () {
@@ -274,19 +254,19 @@ class GameScene extends Phaser.Scene {
   }
 
   setParticles () {
-    this.dust = this.make.particles('dust')
+    this.dust = this.add.particles('dust')
     this.dust.createEmitter(
       {
-        // x: Constants.WIDTH / 2,
-        // y: Constants.HEIGHT / 2,
-        quantity: { min: 200, max: 200 },
+        x: Constants.WIDTH / 2,
+        y: Constants.HEIGHT / 2,
+        quantity: { min: 1, max: 1 },
         speedX: { min: -100, max: 100 },
         speedY: { min: -100, max: 100 },
         gravityY: 0,
         gravityX: 0,
         tint: 0x2bff2b,
         // maxParticles: 20,
-        lifespan: 5000,
+        // lifespan: 5000,
         on: false,
         active: true,
         emitCallback: () => { }
