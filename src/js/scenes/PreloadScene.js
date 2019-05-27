@@ -1,36 +1,36 @@
 /* global Phaser:true */
+import Constants from '../utils/Constants'
+
 // images
-import wallImg from '../../assets/img/wall.png'
-import groundImg from '../../assets/img/ground.png'
-import playerImg from '../../assets/img/player.png'
-import coinImg from '../../assets/img/coin.png'
-import enemyImg from '../../assets/img/enemy.png'
-import dustImg from '../../assets/img/dust.png'
-import expImg from '../../assets/img/exp.png'
-import heartImg from '../../assets/img/heart.png'
+const wallImg = './img/wall.png'
+const groundImg = './img/ground.png'
+const playerImg = './img/player.png'
+const coinImg = './img/coin.png'
+const enemyImg = './img/enemy.png'
+const dustImg = './img/dust.png'
+const expImg = './img/exp.png'
+const heartImg = './img/heart.png'
 
 // ui images
-import rightImg from '../../assets/img/right.png'
-import leftImg from '../../assets/img/left.png'
-import jumpImg from '../../assets/img/jump.png'
-import settingsButtonImg from '../../assets/img/settings.png'
-import startImg from '../../assets/img/start.png'
-import fullscreenButtonImg from '../../assets/img/fullscreen.png'
-import backButtonImg from '../../assets/img/back.png'
-import musicButtonsImg from '../../assets/img/musicButtons.png'
+const rightImg = './img/right.png'
+const leftImg = './img/left.png'
+const jumpImg = './img/jump.png'
+const settingsButtonImg = './img/settings.png'
+const startImg = './img/start.png'
+const fullscreenButtonImg = './img/fullscreen.png'
+const backButtonImg = './img/back.png'
+const musicButtonsImg = 'img/musicButtons.png'
 
 // audio
-import dustAudio from '../../assets/audio/dust.wav'
-import dustAudioMp3 from '../../assets/audio/dust.mp3'
-import clickAudio from '../../assets/audio/click.wav'
-import deadAudio from '../../assets/audio/dead.wav'
-import deadAudioMp3 from '../../assets/audio/dead.mp3'
-import jumpAudio from '../../assets/audio/jump.wav'
-import jumpAudioMp3 from '../../assets/audio/jump.mp3'
-import coinAudio from '../../assets/audio/coin.wav'
-import coinAudioMp3 from '../../assets/audio/coin.mp3'
-
-import Constants from '../utils/Constants'
+const dustAudio = './audio/dust.wav'
+const dustAudioMp3 = './audio/dust.mp3'
+const clickAudio = './audio/click.wav'
+const deadAudio = './audio/dead.wav'
+const deadAudioMp3 = './audio/dead.mp3'
+const jumpAudio = './audio/jump.wav'
+const jumpAudioMp3 = './audio/jump.mp3'
+const coinAudio = './audio/coin.wav'
+const coinAudioMp3 = './audio/coin.mp3'
 
 class PreloadScene extends Phaser.Scene {
   constructor (test) {
@@ -58,10 +58,6 @@ class PreloadScene extends Phaser.Scene {
   }
 
   addProgress () {
-    let authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'LOADING...', {
-      font: '28px minecraft',
-      fill: '#eee'
-    })
 
     const rect = this.add.graphics()
     rect.fillRect(0, Constants.HEIGHT / 2, Constants.WIDTH, 60)
@@ -78,6 +74,11 @@ class PreloadScene extends Phaser.Scene {
     // Register a load complete event to launch the title screen when all files are loaded
     this.load.on('complete', () => {
       progress.destroy()
+    })
+
+    this.authorText = this.add.text(Constants.WIDTH / 2 - 60, Constants.HEIGHT / 2 + 30, 'LOADING...', {
+      font: '28px minecraft',
+      fill: '#3498DB'
     })
   }
 
@@ -107,12 +108,11 @@ class PreloadScene extends Phaser.Scene {
 
   loadUiElements () {
     // load ui
-    this.textures.addBase64('settings', settingsButtonImg)
-    this.textures.addBase64('start', startImg)
-    this.textures.addBase64('fullscreen', fullscreenButtonImg)
-    this.textures.addBase64('back', backButtonImg)
-    // this.textures.addBase64('music', musicButtonsImg)
-    this.load.spritesheet('music', 'img/musicButtons.png', { frameWidth: 48, frameHeight: 48 })
+    this.load.image('settings', settingsButtonImg)
+    this.load.image('start', startImg)
+    this.load.image('fullscreen', fullscreenButtonImg)
+    this.load.image('back', backButtonImg)
+    this.load.spritesheet('music', musicButtonsImg, { frameWidth: 48, frameHeight: 48 })
 
     if (Constants.IS_MOBILE) {
       this.loadControllers()
@@ -130,8 +130,7 @@ class PreloadScene extends Phaser.Scene {
 
   create () {
     console.log('PreloadScene: created()')
-    this.scene.start('SettingsScene')
-    // this.scene.start('BootScene')
+    this.scene.start('BootScene')
   }
 }
 

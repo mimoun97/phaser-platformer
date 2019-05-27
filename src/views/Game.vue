@@ -30,13 +30,13 @@ export default {
       height: Constants.HEIGHT,
       backgroundColor: Constants.BG_COLOR,
       scene: [
-        SettingsScene,
+        // SettingsScene,
         PreloadScene,
         BootScene,
         GameScene,
         OverScene,
         CompleteScene,
-        // SettingsScene
+        SettingsScene
       ],
       physics: {
         default: 'arcade',
@@ -58,11 +58,13 @@ export default {
       },
       loader: {
         baseURL: 'assets'
-      },
-      url: 'https://phaser-platformer-mimoun1997.netlify.com/'
+      }
+      // url: 'https://phaser-platformer-mimoun1997.netlify.com/'
     }
 
-    const game = new Phaser.Game(config) // eslint-disable-line no-unused-vars
+    window.addEventListener('load', () => {
+      const game = new Phaser.Game(config) // eslint-disable-line no-unused-vars
+    })
   }
 }
 </script>

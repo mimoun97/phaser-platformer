@@ -1,3 +1,4 @@
+/* eslint-disable */
 /* global Phaser:true */
 
 class BasicButton extends Phaser.GameObjects.Sprite {

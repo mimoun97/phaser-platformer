@@ -10,60 +10,54 @@ class BootScene extends Phaser.Scene {
   create () {
     console.log('BootScene: created()')
 
-    let titleText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
+    this.titleText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
       font: '48px minecraft',
       fill: '#ffffff'
     })
 
-    let authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'by mimoun1997', {
+    this.authorText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'by mimoun1997', {
       font: '28px minecraft',
       fill: '#eee'
     })
 
-    let startButton = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'start').setInteractive()
-    startButton.alpha = 0.7
+    this.startButton = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'start').setInteractive()
+    this.startButton.on('pointerover', () => { this.startButton.alpha = 0.7 })
+    this.startButton.on('pointerout', () => { this.startButton.alpha = 1 })
+    this.startButton.on('pointerdown', () => { this.startGame() })
 
-    // Input Event listeners
-    startButton.on('pointerover', () => { startButton.alpha = 1 })
-    startButton.on('pointerout', () => { startButton.alpha = 0.7 })
-    startButton.on('pointerdown', () => { this.startGame() })
+    this.settingsButton = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'settings').setInteractive()
+    this.settingsButton.on('pointerover', () => { this.settingsButton.alpha = 0.7 })
+    this.settingsButton.on('pointerout', () => { this.settingsButton.alpha = 1 })
+    this.settingsButton.on('pointerdown', () => { this.scene.start('SettingsScene') })
 
-    let settingsButton = this.add.sprite(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'settings').setInteractive()
-    settingsButton.alpha = 0.7
-    // Input Event listeners
-    settingsButton.on('pointerover', () => { settingsButton.alpha = 1 })
-    settingsButton.on('pointerout', () => { settingsButton.alpha = 0.7 })
-    settingsButton.on('pointerdown', () => { this.scene.start('SettingsScene') })
-
-    let fullscreenButton = this.add.image(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'fullscreen').setInteractive()
-    fullscreenButton.alpha = 0.7
-    fullscreenButton.on('pointerover', () => { fullscreenButton.alpha = 1 })
-    fullscreenButton.on('pointerout', () => { fullscreenButton.alpha = 0.7 })
-    fullscreenButton.on('pointerdown', () => { this.fullscreen() })
+    this.fullscreenButton = this.add.image(Constants.WIDTH / 2, Constants.HEIGHT / 2, 'fullscreen').setInteractive()
+    this.fullscreenButton.on('pointerover', () => { this.fullscreenButton.alpha = 0.7 })
+    this.fullscreenButton.on('pointerout', () => { this.fullscreenButton.alpha = 1 })
+    this.fullscreenButton.on('pointerdown', () => { this.fullscreen() })
 
     //  Center the texts in the game
     Phaser.Display.Align.In.Center(
-      titleText,
+      this.titleText,
       this.add.zone(Constants.WIDTH / 2, Constants.HEIGHT / 2 - 36, Constants.WIDTH, Constants.HEIGHT)
     )
     Phaser.Display.Align.In.Center(
-      authorText,
+      this.authorText,
       this.add.zone(Constants.WIDTH / 2 - 7, Constants.HEIGHT / 2, Constants.WIDTH, Constants.HEIGHT)
     )
 
     Phaser.Display.Align.In.Center(
-      settingsButton,
-      this.add.zone(Constants.WIDTH / 2 - settingsButton.displayWidth - 40, Constants.HEIGHT / 2 + 50, Constants.WIDTH, Constants.HEIGHT)
+      this.settingsButton,
+      this.add.zone(Constants.WIDTH / 2 - this.settingsButton.displayWidth - 40, Constants.HEIGHT / 2 + 50, Constants.WIDTH, Constants.HEIGHT)
     )
 
     Phaser.Display.Align.In.Center(
-      startButton,
+      this.startButton,
       this.add.zone(Constants.WIDTH / 2, Constants.HEIGHT / 2 + 50, Constants.WIDTH, Constants.HEIGHT)
     )
 
     Phaser.Display.Align.In.Center(
-      fullscreenButton,
-      this.add.zone(Constants.WIDTH / 2 + fullscreenButton.displayWidth + 40, Constants.HEIGHT / 2 + 50, Constants.WIDTH, Constants.HEIGHT)
+      this.fullscreenButton,
+      this.add.zone(Constants.WIDTH / 2 + this.fullscreenButton.displayWidth + 40, Constants.HEIGHT / 2 + 50, Constants.WIDTH, Constants.HEIGHT)
     )
   }
 
@@ -83,7 +77,7 @@ class BootScene extends Phaser.Scene {
   startGame () {
     // audio
     let click = this.sound.add('click')
-    click.play()
+    if (Constants.IS_MOBILE) { click.play() }
     this.scene.start('GameScene')
   }
 }

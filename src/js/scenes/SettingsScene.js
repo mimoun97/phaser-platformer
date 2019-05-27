@@ -1,8 +1,6 @@
 /* global Phaser:true */
 import Constants from '../utils/Constants'
 
-require('../../assets/img/heart.png')
-
 class SettingsScene extends Phaser.Scene {
   constructor (test) {
     super({
@@ -11,11 +9,6 @@ class SettingsScene extends Phaser.Scene {
   }
   init (data) {
     console.log('SettingsScene init data: ', data)
-  }
-
-  preload () {
-    this.load.image('back', 'img/back.png')
-    this.load.spritesheet('music', 'img/musicButtons.png', { frameWidth: 48, frameHeight: 48 })
   }
 
   create () {
@@ -49,7 +42,7 @@ class SettingsScene extends Phaser.Scene {
   switchMusic () {
     console.log('MUSIC', Constants.SOUND_ON)
     Constants.SOUND_ON = !Constants.SOUND_ON
-    this.musicButton.setFrame( Constants.SOUND_ON ? 1 : 0)
+    this.musicButton.setFrame(Constants.SOUND_ON ? 1 : 0)
   }
 }
 
