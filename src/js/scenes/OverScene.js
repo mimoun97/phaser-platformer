@@ -1,4 +1,5 @@
 /* global Phaser:true */
+import Constants from '../utils/Constants'
 
 class OverScene extends Phaser.Scene {
   constructor (test) {
@@ -18,6 +19,8 @@ class OverScene extends Phaser.Scene {
   create () {
     console.log('OverScene: created()')
 
+    this.playOverSound()
+
     this.cameras.main.backgroundColor.setTo(231, 76, 60)
 
     let overText = this.add.text(this.sys.game.config.width / 2 + 70, this.sys.game.config.height / 2 + 50,
@@ -34,7 +37,7 @@ class OverScene extends Phaser.Scene {
         fill: '#000'
       })
 
-    let restartText = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'RESTART', {
+    let restartText = this.add.text(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'MENU', {
       font: '20px minecraft',
       fill: '#f4fc07'
     }).setInteractive()
@@ -63,7 +66,22 @@ class OverScene extends Phaser.Scene {
     // audio
     let click = this.sound.add('click')
     click.play()
-    this.scene.start('GameScene', { LIVES: 3 })
+
+    this.stopMusic()
+
+    this.scene.start('BootScene', { LIVES: 3 })
+  }
+
+  stopMusic () {
+    this.bgMusic.stop()
+    Constants.SOUND_PLAYING = false
+  }
+
+  playOverSound () {
+    if (Constants.SOUND_ON === true && Constants.SOUND_PLAYING === true) {
+      this.bgMusic = this.sound.add('over', { volume: 0.8, loop: true })
+      this.bgMusic.play()
+    }
   }
 
   update () {}

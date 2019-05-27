@@ -10,6 +10,9 @@ class BootScene extends Phaser.Scene {
   create () {
     console.log('BootScene: created()')
 
+    // TODO bg music
+    this.playMusic()
+
     this.titleText = this.add.text(Constants.WIDTH / 2, Constants.HEIGHT / 2, '2D PLATFORMER', {
       font: '48px minecraft',
       fill: '#ffffff'
@@ -79,6 +82,15 @@ class BootScene extends Phaser.Scene {
     let click = this.sound.add('click')
     if (Constants.IS_MOBILE) { click.play() }
     this.scene.start('GameScene')
+  }
+
+  playMusic () {
+    if (Constants.SOUND_ON === true && Constants.SOUND_PLAYING === false) {
+      this.bgMusic = this.sound.add('bg1', { volume: 0.8, loop: true })
+      this.bgMusic.play()
+      // this.sys.game.globals.bgMusic = this.bgMusic
+      Constants.SOUND_PLAYING = true
+    }
   }
 }
 

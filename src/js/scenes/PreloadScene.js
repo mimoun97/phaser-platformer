@@ -31,6 +31,10 @@ const jumpAudio = './audio/jump.wav'
 const jumpAudioMp3 = './audio/jump.mp3'
 const coinAudio = './audio/coin.wav'
 const coinAudioMp3 = './audio/coin.mp3'
+const bgMusic1 = './audio/bg1.ogg'
+const levelCompleteMusic = './audio/level-completed.ogg'
+const overMusicMp3 = './audio/game-over.mp3'
+const overMusic = './audio/game-over.ogg'
 
 class PreloadScene extends Phaser.Scene {
   constructor (test) {
@@ -58,7 +62,6 @@ class PreloadScene extends Phaser.Scene {
   }
 
   addProgress () {
-
     const rect = this.add.graphics()
     rect.fillRect(0, Constants.HEIGHT / 2, Constants.WIDTH, 60)
     rect.fillStyle(0x55ffff, 1)
@@ -98,12 +101,9 @@ class PreloadScene extends Phaser.Scene {
   }
 
   loadControllers () {
-    this.textures.addBase64('right', rightImg)
-    this.textures.addBase64('left', leftImg)
-    this.textures.addBase64('jump', jumpImg)
-    // this.load.image('right', rightImg)
-    // this.load.image('left', lefttImg)
-    // this.load.image('jump', jumpImg)
+    this.load.image('right', rightImg)
+    this.load.image('left', leftImg)
+    this.load.image('jump', jumpImg)
   }
 
   loadUiElements () {
@@ -126,6 +126,9 @@ class PreloadScene extends Phaser.Scene {
     this.load.audio('dust', [ dustAudio, dustAudioMp3 ])
     this.load.audio('jump', [ jumpAudio, jumpAudioMp3 ])
     this.load.audio('click', clickAudio)
+    this.load.audio('bg1', bgMusic1)
+    this.load.audio('level-complete', levelCompleteMusic)
+    this.load.audio('over', [ overMusic, overMusicMp3 ])
   }
 
   create () {

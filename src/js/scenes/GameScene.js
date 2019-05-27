@@ -12,7 +12,7 @@ class GameScene extends Phaser.Scene {
     console.log('GameScene init data: ', data)
     this.MAX_SCORE = 30 // max lives
     this.score = data.SCORE || 0
-    this.lives = data.LIVES || 3
+    this.lives = 1 // data.LIVES || 3
     this.scoreText = '' + this.score
     this.livesText = '' + this.lives
     // sound and music
@@ -39,6 +39,9 @@ class GameScene extends Phaser.Scene {
     this.inputs()
 
     if (this.score === this.MAX_SCORE) {
+      if (this.scene.get('BootScene').bgMusic && this.scene.get('BootScene').bgMusic.isPlaying) {
+        this.scene.get('BootScene').bgMusic.stop()
+      }
       this.transitionTo('CompleteScene', { SCORE: this.score })
     }
   }
@@ -68,14 +71,11 @@ class GameScene extends Phaser.Scene {
       if (this.hasJumped) {
         console.log('in the ground')
         this.dustSound.play()
-        this.dust.setX(this.player.x)
-        this.dust.setY(this.player.y + 10)
+        // this.dust.setX(this.player.x)
+        // this.dust.setY(this.player.y + 10)
         console.log('DUST: ', this.dust)
-        // this.dust.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
-        // this.exp.emitters.first.emitParticleAt(this.player.x, this.player.y + 10, 20)
-        this.exp.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 300)
-        this.dust.emitters.first.emitParticleAt(Constants.WIDTH / 2, Constants.HEIGHT / 2, 300)
-        // this.dust.start(true, 300, null, 8)
+        this.dust.emitters.first.emitParticle(15, this.player.x, this.player.y + 10)
+        this.exp.emitters.first.emitParticle(5, this.player.x, this.player.y + 10)
       }
 
       this.hasJumped = false
@@ -150,11 +150,18 @@ class GameScene extends Phaser.Scene {
       player.disableBody(true, true)
       this.time.addEvent({
         delay: 300,
-        callback: () => { this.transitionTo('OverScene', { SCORE: this.score }) },
+        callback: () => { this.gameOver() },
         loop: false,
         repeat: 0
       })
     }
+  }
+
+  gameOver () {
+    if (this.scene.get('BootScene').bgMusic && this.scene.get('BootScene').bgMusic.isPlaying) {
+      this.scene.get('BootScene').bgMusic.stop()
+    }
+    this.transitionTo('OverScene', { SCORE: this.score })
   }
 
   updateScore () {
@@ -257,34 +264,34 @@ class GameScene extends Phaser.Scene {
     this.dust = this.add.particles('dust')
     this.dust.createEmitter(
       {
-        x: Constants.WIDTH / 2,
-        y: Constants.HEIGHT / 2,
+        x: this.player.x, // Constants.WIDTH / 2,
+        y: this.player.y + 10, // Constants.HEIGHT / 2,
         quantity: { min: 1, max: 1 },
         speedX: { min: -100, max: 100 },
         speedY: { min: -100, max: 100 },
         gravityY: 0,
         gravityX: 0,
-        tint: 0x2bff2b,
+        // tint: 0x2bff2b,
         // maxParticles: 20,
-        // lifespan: 5000,
+        lifespan: 300,
         on: false,
         active: true,
         emitCallback: () => { }
       })
 
-    this.exp = this.make.particles('exp')
+    this.exp = this.add.particles('exp')
     this.exp.createEmitter(
       {
-        // x: Constants.WIDTH / 2,
-        // y: Constants.HEIGHT / 2,
+        x: this.player.x, // Constants.WIDTH / 2,
+        y: this.player.y + 10, // Constants.HEIGHT / 2,
         quantity: { min: 1, max: 1 },
         speedX: { min: -150, max: 150 },
         speedY: { min: -150, max: 150 },
         gravityY: 0,
         gravityX: 0,
         // maxParticles: 20,
-        // lifespan: 5000,
-        on: true,
+        lifespan: 200,
+        on: false,
         active: true,
         emitCallback: () => { }
       })
